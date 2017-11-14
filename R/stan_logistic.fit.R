@@ -3,7 +3,7 @@
 #' @rdname stan_logistic
 #' @export
 
-stan_logistic.fit <- function(dat_sav,xgrid) {
+stan_logistic.fit <- function(dat_sav,xgridk,nchains=1) {
   
   xobs=dat_sav$xobs
   yobs=dat_sav$yobs
@@ -26,7 +26,7 @@ stan_logistic.fit <- function(dat_sav,xgrid) {
   init_fun <- function() {list(mu=seq(min(xtrue)+1,max(xtrue)-1,length=5),sigma=rep(1,5),
             Theta=rep(1/5,5),xtrue=xtrue,coef=coefs)}
   stanfit <- stanmodels$logistic
-  fit <- rstan::sampling(stanfit, pars = c("MIC_Dens","gx"),data = dat, iter = 500,chains = 1,thin=2,init=init_fun)
+  fit <- rstan::sampling(stanfit, pars = c("MIC_Dens","gx"),data = dat, iter = 500,chains = nchains,thin=2,init=init_fun)
   parms <- rstan::extract(fit)
   
   return(parms)

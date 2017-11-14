@@ -41,7 +41,7 @@ ycensu[ycens==1] = 1
 
 dat_sav=data.frame(xobs,yobs,xcensl,xcensu,ycensu,ycensl)
 
-list_of_draws = stan_logistic.fit(dat_sav,xgrid)
+list_of_draws = stan_logistic.fit(dat_sav,xgrid,nchains=1)
 
 parms=output_graphs(list_of_draws,xgrid,dat_sav)
 pltRel=parms$pltRel
@@ -53,3 +53,4 @@ maxWidth = unit.pmax(plt1$widths[2:3], plt2$widths[2:3])
 plt1$widths[2:3] <- maxWidth
 plt2$widths[2:3] <- maxWidth
 plot(grid.arrange(plt1, plt2, ncol=1, heights=c(5,2)))
+
