@@ -1,2 +1,8 @@
 exportPattern("^[[:alpha:]]+")
+#' @import ggthemes
+#' @import rstan
+#' @import rstantools
+#' @import Rcpp
+#' @import tidyverse
+#' @import scales
 useDynLib(StanBayesianErrorsMonoModels, .registration = TRUE)
