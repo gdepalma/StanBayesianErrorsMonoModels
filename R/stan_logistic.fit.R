@@ -11,6 +11,7 @@ stan_logistic.fit <- function(dat_sav,xgridk,nchains=1) {
   xcensu=dat_sav$xcensu
   ycensl=dat_sav$ycensl
   ycensu=dat_sav$ycensu
+  Ngrid=length(xgrid)
   
 
   ### Initialize
