@@ -42,7 +42,6 @@ data {
   vector[N] ycensu;
   int xlower;
   int xupper;
-  vector[numCoef] icoefs;
   matrix[N, numCoef] designMatrix;
   matrix[Ngrid, numCoef] designMatrixGrid;
   int n_groups;
@@ -89,7 +88,7 @@ model {
       xtrue[i] ~ normal(xobs[i]+.5,3);
     }
   }
-  coef[numCoef] ~ normal(1,10);
+  coef[numCoef] ~ normal(4,100);
   for(i in (numCoef-1):1)
     coef[i] ~ normal(coef[i+1],alpha_coef);
   alpha_coef ~ uniform(0,2);

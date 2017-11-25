@@ -47,6 +47,7 @@ data {
   vector[N] xcensu;
   vector[N] ycensl;
   vector[N] ycensu;
+  vector[4] coefPrior_mu;
   int n_groups;
   int Ngrid;
   real xgrid[Ngrid];
@@ -78,6 +79,11 @@ model {
   real alpha = 1;
 
   // priors
+  coef[1] ~ normal(coefPrior_mu[1],10);
+  coef[2] ~ normal(coefPrior_mu[2],4);
+  coef[3] ~ normal(coefPrior_mu[3],4);
+  coef[4] ~ normal(coefPrior_mu[4],4);
+  
   sigma ~ normal(.5,4);
   mu ~ normal(0,20);
   v ~ beta(1,alpha);

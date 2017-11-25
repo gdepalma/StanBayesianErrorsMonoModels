@@ -1,8 +1,4 @@
 
-
-#' @rdname stan_logistic
-#' @export
-
 stan_logistic.fit <- function(dat_sav,xgrid,nchains=1,xsig=.707, ysig=2.121) {
   
   xobs=dat_sav$xobs
@@ -20,10 +16,11 @@ stan_logistic.fit <- function(dat_sav,xgrid,nchains=1,xsig=.707, ysig=2.121) {
   xtrue=parms$xtrue
   
   ### Run Stan Model
+  rstan_options(auto_write = TRUE)
   options(mc.cores=parallel::detectCores())
   
   dat=list(y=yobs,xgrid=xgrid,Ngrid=Ngrid,n_groups=5,N=N,xobs=xobs,xsig=xsig, ysig=ysig,
-           xcensl=xcensl,xcensu=xcensu,ycensl=ycensl,ycensu=ycensu)
+           xcensl=xcensl,xcensu=xcensu,ycensl=ycensl,ycensu=ycensu,coefPrior_mu=coefs)
   init_fun <- function() {list(mu=seq(min(xtrue)+1,max(xtrue)-1,length=5),sigma=rep(1,5),
             Theta=rep(1/5,5),xtrue=xtrue,coef=coefs)}
   stanfit <- stanmodels$logistic

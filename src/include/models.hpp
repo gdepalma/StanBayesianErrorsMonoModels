@@ -27,7 +27,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_logistic");
-    reader.add_event(141, 141, "end", "model_logistic");
+    reader.add_event(147, 147, "end", "model_logistic");
     return reader;
 }
 
@@ -63,13 +63,9 @@ getytrue(const Eigen::Matrix<T0__, Eigen::Dynamic,1>& coef,
             stan::math::fill(ytrue,DUMMY_VAR__);
 
 
-            current_statement_begin__ = 8;
             stan::math::assign(mb, (((2 * get_base1(coef,3,"coef",1)) * get_base1(coef,4,"coef",1)) / (get_base1(coef,3,"coef",1) + get_base1(coef,4,"coef",1))));
-            current_statement_begin__ = 9;
             stan::math::assign(fx, (1 / (1 + exp((-(mb) * (get_base1(coef,2,"coef",1) - xtrue))))));
-            current_statement_begin__ = 10;
             stan::math::assign(ytrue, ((get_base1(coef,1,"coef",1) * ((fx * exp((get_base1(coef,3,"coef",1) * (get_base1(coef,2,"coef",1) - xtrue)))) + ((1 - fx) * exp((get_base1(coef,4,"coef",1) * (get_base1(coef,2,"coef",1) - xtrue)))))) / ((1 + (fx * exp((get_base1(coef,3,"coef",1) * (get_base1(coef,2,"coef",1) - xtrue))))) + ((1 - fx) * exp((get_base1(coef,4,"coef",1) * (get_base1(coef,2,"coef",1) - xtrue)))))));
-            current_statement_begin__ = 14;
             return stan::math::promote_scalar<fun_return_scalar_t__>(ytrue);
         }
     } catch (const std::exception& e) {
@@ -107,19 +103,14 @@ xlikecens(const T0__& xobs,
     int current_statement_begin__ = -1;
     try {
 
-        current_statement_begin__ = 20;
         if (as_bool((primitive_value(logical_eq(xcensu,0)) && primitive_value(logical_eq(xcensl,0))))) {
-            current_statement_begin__ = 21;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(normal_cdf_log(xobs,xtrue,xsig),normal_cdf_log((xobs - 1),xtrue,xsig)));
         } else if (as_bool((primitive_value(logical_eq(xcensl,0)) && primitive_value(logical_eq(xcensu,1))))) {
 
-            current_statement_begin__ = 23;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(0,normal_cdf_log((xobs - 1),xtrue,xsig)));
         } else if (as_bool((primitive_value(logical_eq(xcensl,1)) && primitive_value(logical_eq(xcensu,0))))) {
-            current_statement_begin__ = 26;
             return stan::math::promote_scalar<fun_return_scalar_t__>(normal_cdf_log(xobs,xtrue,xsig));
         } else {
-            current_statement_begin__ = 27;
             return stan::math::promote_scalar<fun_return_scalar_t__>(0);
         }
     } catch (const std::exception& e) {
@@ -159,18 +150,13 @@ ylikecens(const T0__& yobs,
     int current_statement_begin__ = -1;
     try {
 
-        current_statement_begin__ = 32;
         if (as_bool((primitive_value(logical_eq(ycensu,0)) && primitive_value(logical_eq(ycensl,0))))) {
-            current_statement_begin__ = 33;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(normal_cdf_log((yobs + 0.5),ytrue,ysig),normal_cdf_log((yobs - 0.5),ytrue,ysig)));
         } else if (as_bool((primitive_value(logical_eq(ycensl,0)) && primitive_value(logical_eq(ycensu,1))))) {
-            current_statement_begin__ = 35;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(0,normal_cdf_log((yobs - 0.5),ytrue,ysig)));
         } else if (as_bool((primitive_value(logical_eq(ycensl,1)) && primitive_value(logical_eq(ycensu,0))))) {
-            current_statement_begin__ = 37;
             return stan::math::promote_scalar<fun_return_scalar_t__>(normal_cdf_log((yobs + 0.5),ytrue,ysig));
         } else {
-            current_statement_begin__ = 38;
             return stan::math::promote_scalar<fun_return_scalar_t__>(0);
         }
     } catch (const std::exception& e) {
@@ -202,6 +188,7 @@ private:
     vector_d xcensu;
     vector_d ycensl;
     vector_d ycensu;
+    vector_d coefPrior_mu;
     int n_groups;
     int Ngrid;
     vector<double> xgrid;
@@ -304,6 +291,16 @@ public:
         size_t ycensu_i_vec_lim__ = N;
         for (size_t i_vec__ = 0; i_vec__ < ycensu_i_vec_lim__; ++i_vec__) {
             ycensu[i_vec__] = vals_r__[pos__++];
+        }
+        validate_non_negative_index("coefPrior_mu", "4", 4);
+        context__.validate_dims("data initialization", "coefPrior_mu", "vector_d", context__.to_vec(4));
+        validate_non_negative_index("coefPrior_mu", "4", 4);
+        coefPrior_mu = vector_d(static_cast<Eigen::VectorXd::Index>(4));
+        vals_r__ = context__.vals_r("coefPrior_mu");
+        pos__ = 0;
+        size_t coefPrior_mu_i_vec_lim__ = 4;
+        for (size_t i_vec__ = 0; i_vec__ < coefPrior_mu_i_vec_lim__; ++i_vec__) {
+            coefPrior_mu[i_vec__] = vals_r__[pos__++];
         }
         context__.validate_dims("data initialization", "n_groups", "int", context__.to_vec());
         n_groups = int(0);
@@ -544,15 +541,11 @@ public:
 
 
         try {
-            current_statement_begin__ = 67;
             stan::math::assign(get_base1_lhs(Theta,1,"Theta",1), get_base1(v,1,"v",1));
-            current_statement_begin__ = 69;
             for (int j = 2; j <= (n_groups - 1); ++j) {
 
-                current_statement_begin__ = 70;
                 stan::math::assign(get_base1_lhs(Theta,j,"Theta",1), (((get_base1(v,j,"v",1) * (1 - get_base1(v,(j - 1),"v",1))) * get_base1(Theta,(j - 1),"Theta",1)) / get_base1(v,(j - 1),"v",1)));
             }
-            current_statement_begin__ = 72;
             stan::math::assign(get_base1_lhs(Theta,n_groups,"Theta",1), (1 - sum(stan::model::rvalue(Theta, stan::model::cons_list(stan::model::index_min_max(1, (n_groups - 1)), stan::model::nil_index_list()), "Theta"))));
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -593,54 +586,41 @@ public:
                 stan::math::assign(alpha,1);
 
 
-                current_statement_begin__ = 81;
+                lp_accum__.add(normal_log<propto__>(get_base1(coef,1,"coef",1), get_base1(coefPrior_mu,1,"coefPrior_mu",1), 10));
+                lp_accum__.add(normal_log<propto__>(get_base1(coef,2,"coef",1), get_base1(coefPrior_mu,2,"coefPrior_mu",1), 4));
+                lp_accum__.add(normal_log<propto__>(get_base1(coef,3,"coef",1), get_base1(coefPrior_mu,3,"coefPrior_mu",1), 4));
+                lp_accum__.add(normal_log<propto__>(get_base1(coef,4,"coef",1), get_base1(coefPrior_mu,4,"coefPrior_mu",1), 4));
                 lp_accum__.add(normal_log<propto__>(sigma, 0.5, 4));
-                current_statement_begin__ = 82;
                 lp_accum__.add(normal_log<propto__>(mu, 0, 20));
-                current_statement_begin__ = 83;
                 lp_accum__.add(beta_log<propto__>(v, 1, alpha));
-                current_statement_begin__ = 84;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 85;
                     if (as_bool((primitive_value(logical_eq(get_base1(xcensl,i,"xcensl",1),0)) && primitive_value(logical_eq(get_base1(xcensu,i,"xcensu",1),0))))) {
 
-                        current_statement_begin__ = 86;
                         lp_accum__.add(normal_log<propto__>(get_base1(xtrue,i,"xtrue",1), (get_base1(xobs,i,"xobs",1) - 0.5), 2));
                     } else if (as_bool((primitive_value(logical_eq(get_base1(xcensl,i,"xcensl",1),1)) && primitive_value(logical_eq(get_base1(xcensu,i,"xcensu",1),0))))) {
 
-                        current_statement_begin__ = 88;
                         lp_accum__.add(normal_log<propto__>(get_base1(xtrue,i,"xtrue",1), (get_base1(xobs,i,"xobs",1) - 1.5), 3));
                     } else if (as_bool((primitive_value(logical_eq(get_base1(xcensl,i,"xcensl",1),0)) && primitive_value(logical_eq(get_base1(xcensu,i,"xcensu",1),1))))) {
 
-                        current_statement_begin__ = 90;
                         lp_accum__.add(normal_log<propto__>(get_base1(xtrue,i,"xtrue",1), (get_base1(xobs,i,"xobs",1) + 0.5), 3));
                     }
                 }
-                current_statement_begin__ = 96;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 97;
                     lp_accum__.add(xlikecens(get_base1(xobs,i,"xobs",1),get_base1(xtrue,i,"xtrue",1),xsig,get_base1(xcensu,i,"xcensu",1),get_base1(xcensl,i,"xcensl",1), pstream__));
                 }
-                current_statement_begin__ = 101;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 102;
                     stan::math::assign(y_mu, getytrue(coef,get_base1(xtrue,i,"xtrue",1),get_base1(yobs,i,"yobs",1), pstream__));
-                    current_statement_begin__ = 103;
                     lp_accum__.add(ylikecens(get_base1(yobs,i,"yobs",1),y_mu,ysig,get_base1(ycensu,i,"ycensu",1),get_base1(ycensl,i,"ycensl",1), pstream__));
                 }
-                current_statement_begin__ = 107;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 108;
                     for (int k = 1; k <= n_groups; ++k) {
 
-                        current_statement_begin__ = 109;
                         stan::math::assign(get_base1_lhs(contributions,k,"contributions",1), (log(get_base1(Theta,k,"Theta",1)) + normal_log(get_base1(xtrue,i,"xtrue",1),get_base1(mu,k,"mu",1),get_base1(sigma,k,"sigma",1))));
                     }
-                    current_statement_begin__ = 111;
                     lp_accum__.add(log_sum_exp(contributions));
                 }
             }
@@ -780,15 +760,11 @@ public:
 
 
         try {
-            current_statement_begin__ = 67;
             stan::math::assign(get_base1_lhs(Theta,1,"Theta",1), get_base1(v,1,"v",1));
-            current_statement_begin__ = 69;
             for (int j = 2; j <= (n_groups - 1); ++j) {
 
-                current_statement_begin__ = 70;
                 stan::math::assign(get_base1_lhs(Theta,j,"Theta",1), (((get_base1(v,j,"v",1) * (1 - get_base1(v,(j - 1),"v",1))) * get_base1(Theta,(j - 1),"Theta",1)) / get_base1(v,(j - 1),"v",1)));
             }
-            current_statement_begin__ = 72;
             stan::math::assign(get_base1_lhs(Theta,n_groups,"Theta",1), (1 - sum(stan::model::rvalue(Theta, stan::model::cons_list(stan::model::index_min_max(1, (n_groups - 1)), stan::model::nil_index_list()), "Theta"))));
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -826,26 +802,18 @@ public:
 
 
         try {
-            current_statement_begin__ = 124;
             for (int i = 1; i <= Ngrid; ++i) {
 
-                current_statement_begin__ = 125;
                 stan::math::assign(get_base1_lhs(MIC_Dens,i,"MIC_Dens",1), 0);
-                current_statement_begin__ = 126;
                 for (int j = 1; j <= n_groups; ++j) {
 
-                    current_statement_begin__ = 127;
                     stan::math::assign(get_base1_lhs(MIC_Dens,i,"MIC_Dens",1), (get_base1(MIC_Dens,i,"MIC_Dens",1) + (((get_base1(Theta,j,"Theta",1) * 1) / sqrt(((2 * stan::math::pi()) * pow(get_base1(sigma,j,"sigma",1),2)))) * exp((-(pow((get_base1(xgrid,i,"xgrid",1) - get_base1(mu,j,"mu",1)),2)) / (2 * pow(get_base1(sigma,j,"sigma",1),2)))))));
                 }
             }
-            current_statement_begin__ = 133;
             stan::math::assign(mb, (((2 * get_base1(coef,3,"coef",1)) * get_base1(coef,4,"coef",1)) / (get_base1(coef,3,"coef",1) + get_base1(coef,4,"coef",1))));
-            current_statement_begin__ = 134;
             for (int i = 1; i <= Ngrid; ++i) {
 
-                current_statement_begin__ = 135;
                 stan::math::assign(get_base1_lhs(fx,i,"fx",1), (1 / (1 + exp((-(mb) * (get_base1(coef,2,"coef",1) - get_base1(xgrid,i,"xgrid",1)))))));
-                current_statement_begin__ = 136;
                 stan::math::assign(get_base1_lhs(gx,i,"gx",1), ((get_base1(coef,1,"coef",1) * ((get_base1(fx,i,"fx",1) * exp((get_base1(coef,3,"coef",1) * (get_base1(coef,2,"coef",1) - get_base1(xgrid,i,"xgrid",1))))) + ((1 - get_base1(fx,i,"fx",1)) * exp((get_base1(coef,4,"coef",1) * (get_base1(coef,2,"coef",1) - get_base1(xgrid,i,"xgrid",1))))))) / ((1 + (get_base1(fx,i,"fx",1) * exp((get_base1(coef,3,"coef",1) * (get_base1(coef,2,"coef",1) - get_base1(xgrid,i,"xgrid",1)))))) + ((1 - get_base1(fx,i,"fx",1)) * exp((get_base1(coef,4,"coef",1) * (get_base1(coef,2,"coef",1) - get_base1(xgrid,i,"xgrid",1))))))));
             }
         } catch (const std::exception& e) {
@@ -1041,7 +1009,7 @@ static int current_statement_begin__;
 stan::io::program_reader prog_reader__() {
     stan::io::program_reader reader;
     reader.add_event(0, 0, "start", "model_spline");
-    reader.add_event(136, 136, "end", "model_spline");
+    reader.add_event(135, 135, "end", "model_spline");
     return reader;
 }
 
@@ -1062,19 +1030,14 @@ xlikecens(const T0__& xobs,
     int current_statement_begin__ = -1;
     try {
 
-        current_statement_begin__ = 8;
         if (as_bool((primitive_value(logical_eq(xcensu,0)) && primitive_value(logical_eq(xcensl,0))))) {
-            current_statement_begin__ = 9;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(normal_cdf_log(xobs,xtrue,xsig),normal_cdf_log((xobs - 1),xtrue,xsig)));
         } else if (as_bool((primitive_value(logical_eq(xcensl,0)) && primitive_value(logical_eq(xcensu,1))))) {
 
-            current_statement_begin__ = 11;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(0,normal_cdf_log((xobs - 1),xtrue,xsig)));
         } else if (as_bool((primitive_value(logical_eq(xcensl,1)) && primitive_value(logical_eq(xcensu,0))))) {
-            current_statement_begin__ = 14;
             return stan::math::promote_scalar<fun_return_scalar_t__>(normal_cdf_log(xobs,xtrue,xsig));
         } else {
-            current_statement_begin__ = 15;
             return stan::math::promote_scalar<fun_return_scalar_t__>(0);
         }
     } catch (const std::exception& e) {
@@ -1114,18 +1077,13 @@ ylikecens(const T0__& yobs,
     int current_statement_begin__ = -1;
     try {
 
-        current_statement_begin__ = 23;
         if (as_bool((primitive_value(logical_eq(ycensu,0)) && primitive_value(logical_eq(ycensl,0))))) {
-            current_statement_begin__ = 24;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(normal_cdf_log((yobs + 0.5),ytrue,ysig),normal_cdf_log((yobs - 0.5),ytrue,ysig)));
         } else if (as_bool((primitive_value(logical_eq(ycensl,0)) && primitive_value(logical_eq(ycensu,1))))) {
-            current_statement_begin__ = 26;
             return stan::math::promote_scalar<fun_return_scalar_t__>(log_diff_exp(0,normal_cdf_log((yobs - 0.5),ytrue,ysig)));
         } else if (as_bool((primitive_value(logical_eq(ycensl,1)) && primitive_value(logical_eq(ycensu,0))))) {
-            current_statement_begin__ = 28;
             return stan::math::promote_scalar<fun_return_scalar_t__>(normal_cdf_log((yobs + 0.5),ytrue,ysig));
         } else {
-            current_statement_begin__ = 29;
             return stan::math::promote_scalar<fun_return_scalar_t__>(0);
         }
     } catch (const std::exception& e) {
@@ -1161,7 +1119,6 @@ private:
     vector_d ycensu;
     int xlower;
     int xupper;
-    vector_d icoefs;
     matrix_d designMatrix;
     matrix_d designMatrixGrid;
     int n_groups;
@@ -1286,16 +1243,6 @@ public:
         vals_i__ = context__.vals_i("xupper");
         pos__ = 0;
         xupper = vals_i__[pos__++];
-        validate_non_negative_index("icoefs", "numCoef", numCoef);
-        context__.validate_dims("data initialization", "icoefs", "vector_d", context__.to_vec(numCoef));
-        validate_non_negative_index("icoefs", "numCoef", numCoef);
-        icoefs = vector_d(static_cast<Eigen::VectorXd::Index>(numCoef));
-        vals_r__ = context__.vals_r("icoefs");
-        pos__ = 0;
-        size_t icoefs_i_vec_lim__ = numCoef;
-        for (size_t i_vec__ = 0; i_vec__ < icoefs_i_vec_lim__; ++i_vec__) {
-            icoefs[i_vec__] = vals_r__[pos__++];
-        }
         validate_non_negative_index("designMatrix", "N", N);
         validate_non_negative_index("designMatrix", "numCoef", numCoef);
         context__.validate_dims("data initialization", "designMatrix", "matrix_d", context__.to_vec(N,numCoef));
@@ -1582,15 +1529,11 @@ public:
 
 
         try {
-            current_statement_begin__ = 65;
             stan::math::assign(get_base1_lhs(Theta,1,"Theta",1), get_base1(v,1,"v",1));
-            current_statement_begin__ = 67;
             for (int j = 2; j <= (n_groups - 1); ++j) {
 
-                current_statement_begin__ = 68;
                 stan::math::assign(get_base1_lhs(Theta,j,"Theta",1), (((get_base1(v,j,"v",1) * (1 - get_base1(v,(j - 1),"v",1))) * get_base1(Theta,(j - 1),"Theta",1)) / get_base1(v,(j - 1),"v",1)));
             }
-            current_statement_begin__ = 70;
             stan::math::assign(get_base1_lhs(Theta,n_groups,"Theta",1), (1 - sum(stan::model::rvalue(Theta, stan::model::cons_list(stan::model::index_min_max(1, (n_groups - 1)), stan::model::nil_index_list()), "Theta"))));
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -1634,63 +1577,42 @@ public:
                 stan::math::assign(alpha,1);
 
 
-                current_statement_begin__ = 80;
                 lp_accum__.add(normal_log<propto__>(sigma, 0.5, 4));
-                current_statement_begin__ = 81;
                 lp_accum__.add(normal_log<propto__>(mu, 0, 20));
-                current_statement_begin__ = 82;
                 lp_accum__.add(beta_log<propto__>(v, 1, alpha));
-                current_statement_begin__ = 83;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 84;
                     if (as_bool((primitive_value(logical_eq(get_base1(xcensl,i,"xcensl",1),0)) && primitive_value(logical_eq(get_base1(xcensu,i,"xcensu",1),0))))) {
 
-                        current_statement_begin__ = 85;
                         lp_accum__.add(normal_log<propto__>(get_base1(xtrue,i,"xtrue",1), (get_base1(xobs,i,"xobs",1) - 0.5), 2));
                     } else if (as_bool((primitive_value(logical_eq(get_base1(xcensl,i,"xcensl",1),1)) && primitive_value(logical_eq(get_base1(xcensu,i,"xcensu",1),0))))) {
 
-                        current_statement_begin__ = 87;
                         lp_accum__.add(normal_log<propto__>(get_base1(xtrue,i,"xtrue",1), (get_base1(xobs,i,"xobs",1) - 1.5), 3));
                     } else if (as_bool((primitive_value(logical_eq(get_base1(xcensl,i,"xcensl",1),0)) && primitive_value(logical_eq(get_base1(xcensu,i,"xcensu",1),1))))) {
 
-                        current_statement_begin__ = 89;
                         lp_accum__.add(normal_log<propto__>(get_base1(xtrue,i,"xtrue",1), (get_base1(xobs,i,"xobs",1) + 0.5), 3));
                     }
                 }
-                current_statement_begin__ = 92;
-                lp_accum__.add(normal_log<propto__>(get_base1(coef,numCoef,"coef",1), 1, 10));
-                current_statement_begin__ = 93;
+                lp_accum__.add(normal_log<propto__>(get_base1(coef,numCoef,"coef",1), 4, 100));
                 for (int i = (numCoef - 1); i <= 1; ++i) {
-                    current_statement_begin__ = 94;
                     lp_accum__.add(normal_log<propto__>(get_base1(coef,i,"coef",1), get_base1(coef,(i + 1),"coef",1), alpha_coef));
                 }
-                current_statement_begin__ = 95;
                 lp_accum__.add(uniform_log<propto__>(alpha_coef, 0, 2));
-                current_statement_begin__ = 99;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 100;
                     lp_accum__.add(xlikecens(get_base1(xobs,i,"xobs",1),get_base1(xtrue,i,"xtrue",1),xsig,get_base1(xcensu,i,"xcensu",1),get_base1(xcensl,i,"xcensl",1), pstream__));
                 }
-                current_statement_begin__ = 104;
                 stan::math::assign(y_mu, multiply(coef,transpose(designMatrix)));
-                current_statement_begin__ = 105;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 106;
                     lp_accum__.add(ylikecens(get_base1(yobs,i,"yobs",1),get_base1(y_mu,i,"y_mu",1),ysig,get_base1(ycensu,i,"ycensu",1),get_base1(ycensl,i,"ycensl",1), pstream__));
                 }
-                current_statement_begin__ = 110;
                 for (int i = 1; i <= N; ++i) {
 
-                    current_statement_begin__ = 111;
                     for (int k = 1; k <= n_groups; ++k) {
 
-                        current_statement_begin__ = 112;
                         stan::math::assign(get_base1_lhs(contributions,k,"contributions",1), (log(get_base1(Theta,k,"Theta",1)) + normal_log(get_base1(xtrue,i,"xtrue",1),get_base1(mu,k,"mu",1),get_base1(sigma,k,"sigma",1))));
                     }
-                    current_statement_begin__ = 114;
                     lp_accum__.add(log_sum_exp(contributions));
                 }
             }
@@ -1828,15 +1750,11 @@ public:
 
 
         try {
-            current_statement_begin__ = 65;
             stan::math::assign(get_base1_lhs(Theta,1,"Theta",1), get_base1(v,1,"v",1));
-            current_statement_begin__ = 67;
             for (int j = 2; j <= (n_groups - 1); ++j) {
 
-                current_statement_begin__ = 68;
                 stan::math::assign(get_base1_lhs(Theta,j,"Theta",1), (((get_base1(v,j,"v",1) * (1 - get_base1(v,(j - 1),"v",1))) * get_base1(Theta,(j - 1),"Theta",1)) / get_base1(v,(j - 1),"v",1)));
             }
-            current_statement_begin__ = 70;
             stan::math::assign(get_base1_lhs(Theta,n_groups,"Theta",1), (1 - sum(stan::model::rvalue(Theta, stan::model::cons_list(stan::model::index_min_max(1, (n_groups - 1)), stan::model::nil_index_list()), "Theta"))));
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());
@@ -1867,19 +1785,14 @@ public:
 
 
         try {
-            current_statement_begin__ = 125;
             for (int i = 1; i <= Ngrid; ++i) {
 
-                current_statement_begin__ = 126;
                 stan::math::assign(get_base1_lhs(MIC_Dens,i,"MIC_Dens",1), 0);
-                current_statement_begin__ = 127;
                 for (int j = 1; j <= n_groups; ++j) {
 
-                    current_statement_begin__ = 128;
                     stan::math::assign(get_base1_lhs(MIC_Dens,i,"MIC_Dens",1), (get_base1(MIC_Dens,i,"MIC_Dens",1) + (((get_base1(Theta,j,"Theta",1) * 1) / sqrt(((2 * stan::math::pi()) * pow(get_base1(sigma,j,"sigma",1),2)))) * exp((-(pow((get_base1(xgrid,i,"xgrid",1) - get_base1(mu,j,"mu",1)),2)) / (2 * pow(get_base1(sigma,j,"sigma",1),2)))))));
                 }
             }
-            current_statement_begin__ = 134;
             stan::math::assign(gx, multiply(coef,transpose(designMatrixGrid)));
         } catch (const std::exception& e) {
             stan::lang::rethrow_located(e, current_statement_begin__, prog_reader__());

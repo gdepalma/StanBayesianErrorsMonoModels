@@ -1,16 +1,47 @@
-  initialize_parms_spline=function(xobs,yobs,xcensl,xcensu,xgrid){
+Ispline=function(intknots,lowept,upperept){
+  k=3
+  #determine knot sequence
+  knotseq=c(rep(lowept,k+1),intknots,rep(upperept,k+1))
+  numbases=length(knotseq)-k-2
   
-  ## Initial xtrue
+  #create matrix of bases
+  bases=matrix(NA,nrow=numbases,ncol=2)
+  for(i in 1:numbases) bases[i,]=c(knotseq[i+1],knotseq[i+k+1])
+  
+  return(list(bases=bases,knotseq=knotseq))
+}
+
+
+getIsplineC=function(xtrue,knotseq,bases){
+  
+  numBases=nrow(bases)
+  lxtrue=length(xtrue)
+  
+  mat=rep(0,numBases*lxtrue)
+  
+  storage.mode(mat) <- "double"
+  storage.mode(knotseq) <- "double"
+  storage.mode(xtrue) <- "double"
+  storage.mode(numBases) <- "integer"
+  storage.mode(lxtrue) <- "integer"
+  temp=.C("getIspline",xtrue,lxtrue,knotseq,mat,numBases)
+  designMatrix=matrix(temp[[4]],ncol=numBases,nrow=lxtrue)
+  return(designMatrix)
+  
+}
+
+initialize_parms_spline=function(xobs,yobs,xcensl,xcensu,xgrid){
+  
+  ## Initialize xtrue  
   xtrue=rep(NA,length(xobs))
-  for(i in 1:length(xobs)){
-    if(xcensl[i]==0 & xcensu[i]==0){
-      xtrue[i]=xobs[i]-runif(1,0,1)
-    }else if(xcensl[i]==1 & xcensu[i]==0){
-      xtrue[i]=xobs[i]-runif(1,.5,1.5)
-    }else if(xcensl[i]==0 & xcensu[i]==1){
-      xtrue[i]=xobs[i]+runif(1,0,1)
-    }
-  }
+  
+  n=sum(xcensl==0 & xcensu==0)
+  n1=sum(xcensl==1)
+  n2=sum(xcensu==1)
+  
+  xtrue[xcensl==0 & xcensu==0]=xobs[xcensl==0 & xcensu==0]-runif(n,0,1)
+  xtrue[xcensl==1]=xobs[xcensl==1]-runif(n1,.5,2)
+  xtrue[xcensu==1]=xobs[xcensu==1]+runif(n2,.5,1.5)
   
   ### endpoints
   xlower=min(xobs)-2
@@ -30,7 +61,6 @@
   bases=parms$bases;
   knotseq=parms$knotseq
 
-  
   #### Initial spline coefficients
   designMatrix=getIsplineC(xtrue,knotseq,bases)
   designMatrixGrid=getIsplineC(xgrid,knotseq,bases)
