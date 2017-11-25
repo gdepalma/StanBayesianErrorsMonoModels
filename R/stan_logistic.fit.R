@@ -24,7 +24,8 @@ stan_logistic.fit <- function(dat_sav,xgrid,nchains=1,xsig=.707, ysig=2.121) {
   init_fun <- function() {list(mu=seq(min(xtrue)+1,max(xtrue)-1,length=5),sigma=rep(1,5),
             Theta=rep(1/5,5),xtrue=xtrue,coef=coefs)}
   stanfit <- stanmodels$logistic
-  fit <- rstan::sampling(stanfit, pars = c("MIC_Dens","gx"),data = dat, iter = 500,chains = nchains,thin=2,init=init_fun)
+  fit <- rstan::sampling(stanfit, pars = c("MIC_Dens","gx"),data = dat, iter = 500,chains = nchains,thin=2,init=init_fun,
+                         control = list(max_treedepth = 15))
   parms <- rstan::extract(fit)
   
   return(parms)
