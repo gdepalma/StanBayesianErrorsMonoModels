@@ -22,7 +22,7 @@ dat_sav=data.frame(xobs,yobs,xcensl,xcensu,ycensu,ycensl)
 
 # list_of_draws = stan_logistic.fit(dat_sav,xgrid,nchains=1)
 
-list_of_draws = stan_spline.fit(dat_sav,xgrid,nchains=1)
+list_of_draws = stan_spline.fit(dat_sav,xgrid,nchains=1,numIter=500)
 
-list_of_draws = stan_spline.fit(dat_sav,xgrid,nchains=3)
+list_of_draws = stan_spline.fit(dat_sav,xgrid,nchains=3,numIter=500)
 
