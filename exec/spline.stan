@@ -90,7 +90,7 @@ model {
   }
   coef[numCoef] ~ normal(4,100);
   for(i in (numCoef-1):1)
-    coef[i] ~ normal(coef[i+1],alpha_coef);
+    coef[i] ~ normal(coef[i+1],1);
   alpha_coef ~ uniform(0,2);
   
 
