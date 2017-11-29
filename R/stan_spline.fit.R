@@ -31,7 +31,7 @@ stan_spline.fit <- function(dat_sav,xgrid,nchains=1,numIter=500,xsig=.707, ysig=
             Theta=rep(1/5,5),xtrue=xtrue,coef=coefs,alpha_coef=1)}
   stanfit <- stanmodels$spline
   fit <- rstan::sampling(stanfit, pars = c("MIC_Dens","gx"),data = dat, iter = numIter,chains = nchains,thin=5,init=init_fun,
-                         control = list(adapt_delta = 0.9))
+                         control = list(adapt_delta = 0.98))
   parms <- extract(fit)
   
   return(parms)
